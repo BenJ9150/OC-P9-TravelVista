@@ -9,18 +9,41 @@ import SwiftUI
 
 struct ListView: View {
 
-    @State private var scrollOffset: CGFloat = 0
     let regions: [Region]
-
-    // Simple version with List
+    @State private var pinnedRegionName = ""
     
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+                    ForEach(regions, id: \.name) { region in
+                        Section {
+                            countriesList(for: region)
+                        } header: {
+                            headerView(regionName: region.name)
+                        }
+                        Spacer()
+                    }
+                    .onAppear {
+                        pinnedRegionName = ""
+                    }
+                }
+                .coordinateSpace(.named("LazyVStack"))
+                .padding(.vertical, 22)
+            }
+            .navigationTitle("Liste de voyages")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+//    // Simple version with List
 //    var body: some View {
 //        NavigationStack {
 //            List {
 //                ForEach(regions, id: \.name) { region in
 //                    Section {
 //                        ForEach(region.countries, id: \.self) { country in
-//                            countryRaw(for: country)
+//                            countryItem(for: country)
 //                        }
 //                    } header: {
 //                        Text(region.name)
@@ -32,54 +55,67 @@ struct ListView: View {
 //            .navigationBarTitleDisplayMode(.inline)
 //        }
 //    }
+}
 
-    // Version with LazyVStack and pinned headers
+// MARK: Header View
 
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                    ForEach(regions, id: \.name) { region in
-                        Section {
-                            ForEach(region.countries, id: \.self) { country in
-                                VStack(spacing: 0) {
-                                    if country == region.countries.first {
-                                        Divider()
-                                            .padding(.leading)
-                                    }
-                                    countryRaw(for: country)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 6)
-                                    Divider()
-                                        .padding(.leading)
-                                }
-                                .frame(height: 65)
-                                .padding(.bottom, country == region.countries.last ? 22 : 0)
-                            }
-                        } header: {
-                            Text(region.name)
-                                .font(.subheadline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .foregroundStyle(Color("TableViewHeader"))
-                                .bold()
-                                .padding(.leading)
-                                .frame(height: 28)
-                                .background(Color(.systemBackground))
-                        }
+private extension ListView {
+    
+    func headerView(regionName: String) -> some View {
+        GeometryReader { geo in
+            Text(regionName)
+                .font(.subheadline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundStyle(Color("TableViewHeader"))
+                .bold()
+                .padding(.leading)
+                .frame(height: 28)
+                .background(
+                    Rectangle()
+                        .fill(Material.bar)
+                        .opacity(pinnedRegionName == regionName ? 1 : 0)
+                )
+                .onChange(of: geo.frame(in: .named("LazyVStack")).minY) { _, minY in
+                    if abs(minY) == 0 {
+                        pinnedRegionName = "" // no scroll, so no pinned header
+                    } else {
+                        // header is moving into LazyVStack, so is pinned
+                        pinnedRegionName = regionName
                     }
                 }
+        }
+        .frame(height: 28)
+    }
+}
+
+// MARK: Countries list
+
+private extension ListView {
+
+    func countriesList(for region: Region) -> some View {
+        ForEach(region.countries, id: \.self) { country in
+            VStack(spacing: 0) {
+                if country == region.countries.first {
+                    Divider()
+                        .padding(.leading)
+                }
+                countryItem(for: country)
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+                Divider()
+                    .padding(.leading)
             }
-            .navigationTitle("Liste de voyages")
-            .navigationBarTitleDisplayMode(.inline)
+            .frame(height: 65)
+            .padding(.bottom, country == region.countries.last ? 14 : 0)
         }
     }
 }
 
-// MARK: country raw
+// MARK: Country item
 
 private extension ListView {
 
-    func countryRaw(for country: Country) -> some View {
+    func countryItem(for country: Country) -> some View {
         HStack {
             Image(uiImage: UIImage(named: country.pictureName) ?? UIImage())
                 .resizable()

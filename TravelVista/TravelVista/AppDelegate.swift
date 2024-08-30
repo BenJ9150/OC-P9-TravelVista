@@ -19,18 +19,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-// MARK: Migration
+// MARK: SwiftUI migration
 
 extension AppDelegate {
 
     private func setHostingControllerForListView() {
-        guard let rootVC =  window?.rootViewController else {
+        guard let window = window else {
             return
         }
         let regions: [Region] = Service().load("Source.json")
         let hostingController = UIHostingController(rootView: ListView(regions: regions))
-        rootVC.addChild(hostingController)
-        rootVC.view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: rootVC)
+        
+        if let oldRootViewController = window.rootViewController {
+            oldRootViewController.view.removeFromSuperview()
+            oldRootViewController.removeFromParent()
+        }
+        window.rootViewController = hostingController
+        window.makeKeyAndVisible()
     }
 }
