@@ -43,7 +43,12 @@ struct ListView: View {
 //                ForEach(regions, id: \.name) { region in
 //                    Section {
 //                        ForEach(region.countries, id: \.self) { country in
-//                            countryItem(for: country)
+//                            NavigationLink {
+//                                DetailView(country: country)
+//                            } label: {
+//                                countryItem(for: country)
+//                            }
+//
 //                        }
 //                    } header: {
 //                        Text(region.name)
@@ -94,19 +99,24 @@ private extension ListView {
 
     func countriesList(for region: Region) -> some View {
         ForEach(region.countries, id: \.self) { country in
-            VStack(spacing: 0) {
-                if country == region.countries.first {
+            NavigationLink {
+                DetailView(country: country)
+            } label: {
+                VStack(spacing: 0) {
+                    if country == region.countries.first {
+                        Divider()
+                            .padding(.leading)
+                    }
+                    countryItem(for: country)
+                        .padding(.horizontal)
+                        .padding(.vertical, 6)
                     Divider()
                         .padding(.leading)
                 }
-                countryItem(for: country)
-                    .padding(.horizontal)
-                    .padding(.vertical, 6)
-                Divider()
-                    .padding(.leading)
+                .frame(height: 65)
+                .padding(.bottom, country == region.countries.last ? 14 : 0)
             }
-            .frame(height: 65)
-            .padding(.bottom, country == region.countries.last ? 14 : 0)
+
         }
     }
 }
@@ -132,6 +142,7 @@ private extension ListView {
                 Text(country.capital)
                     .font(.system(size: 15))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.primary)
                     .frame(height: 20)
                     .padding(.bottom, 6)
             }
@@ -139,6 +150,7 @@ private extension ListView {
             Spacer()
             Text("\(country.rate)")
                 .font(.system(size: 17))
+                .foregroundColor(.primary)
             Image(systemName: "star.fill")
                 .resizable()
                 .scaledToFit()
