@@ -17,6 +17,7 @@
 		42B90C1C2B2A056000779364 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42B90C1B2B2A056000779364 /* Assets.xcassets */; };
 		42B90C1F2B2A056000779364 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42B90C1D2B2A056000779364 /* LaunchScreen.storyboard */; };
 		43395A122C8209CB00F89F5C /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43395A112C8209CB00F89F5C /* DetailView.swift */; };
+		43395A152C82116300F89F5C /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43395A142C82116300F89F5C /* ListViewModel.swift */; };
 		438B2B5E2C80CB170089A8B9 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438B2B5D2C80CB170089A8B9 /* ListView.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		42B90C1E2B2A056000779364 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42B90C202B2A056000779364 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43395A112C8209CB00F89F5C /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		43395A142C82116300F89F5C /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
 		438B2B5D2C80CB170089A8B9 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,6 +89,7 @@
 			children = (
 				424C31C92B30ABE600279238 /* Model */,
 				424C31BE2B30956400279238 /* Views */,
+				43395A132C82114400F89F5C /* SwiftUIViewModel */,
 				438B2B5C2C80CAF00089A8B9 /* SwiftUIViews */,
 				42B90C122B2A055B00779364 /* AppDelegate.swift */,
 				42B90C182B2A055B00779364 /* Main.storyboard */,
@@ -95,6 +98,14 @@
 				42B90C202B2A056000779364 /* Info.plist */,
 			);
 			path = TravelVista;
+			sourceTree = "<group>";
+		};
+		43395A132C82114400F89F5C /* SwiftUIViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				43395A142C82116300F89F5C /* ListViewModel.swift */,
+			);
+			path = SwiftUIViewModel;
 			sourceTree = "<group>";
 		};
 		438B2B5C2C80CAF00089A8B9 /* SwiftUIViews */ = {
@@ -184,6 +195,7 @@
 				43395A122C8209CB00F89F5C /* DetailView.swift in Sources */,
 				424C31C02B30A39B00279238 /* MapViewController.swift in Sources */,
 				42B90C132B2A055B00779364 /* AppDelegate.swift in Sources */,
+				43395A152C82116300F89F5C /* ListViewModel.swift in Sources */,
 				424C31BD2B30955E00279238 /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

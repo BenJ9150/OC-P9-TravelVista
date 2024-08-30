@@ -9,14 +9,14 @@ import SwiftUI
 
 struct ListView: View {
 
-    let regions: [Region]
+    let viewModel = ListViewModel()
     @State private var pinnedRegionName = ""
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                    ForEach(regions, id: \.name) { region in
+                    ForEach(viewModel.regions, id: \.name) { region in
                         Section {
                             countriesList(for: region)
                         } header: {
@@ -165,5 +165,5 @@ private extension ListView {
 // MARK: - Preview
 
 #Preview {
-    ListView(regions: Service().load("Source.json"))
+    ListView()
 }

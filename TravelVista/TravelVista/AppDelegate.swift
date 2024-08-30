@@ -27,8 +27,7 @@ extension AppDelegate {
         guard let window = window else {
             return
         }
-        let regions: [Region] = Service().load("Source.json")
-        let hostingController = UIHostingController(rootView: ListView(regions: regions))
+        let hostingController = UIHostingController(rootView: ListView())
         
         if let oldRootViewController = window.rootViewController {
             oldRootViewController.view.removeFromSuperview()
