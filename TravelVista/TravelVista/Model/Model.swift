@@ -28,3 +28,17 @@ struct Coordinates: Codable {
     var latitude: Double
     var longitude: Double
 }
+
+// MARK: SwiftUI migration
+
+extension Country: Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(capital)
+    }
+
+    static func == (lhs: Country, rhs: Country) -> Bool {
+        return lhs.name == rhs.name && lhs.capital == rhs.capital
+    }
+}
