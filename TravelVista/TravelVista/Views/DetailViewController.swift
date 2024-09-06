@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import SwiftUI
 
 class DetailViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var countryNameLabel: UILabel!
@@ -28,6 +29,7 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
 
         if let country = self.country {
             self.setUpData(country: country)
+            self.setHostingControllerForTitleView(country: country)
         }
     }
     
@@ -83,5 +85,34 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         let nextViewController: MapViewController = storyBoard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
         nextViewController.setUpData(capitalName: self.country?.capital, lat: self.country?.coordinates.latitude ?? 28.394857, long: self.country?.coordinates.longitude ?? 84.124008)
         self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+}
+
+// MARK: SwiftUI migration
+
+extension DetailViewController {
+
+    private func setHostingControllerForTitleView(country: Country) {
+        let titleViewHeight: CGFloat = 65
+        let titleViewSwiftUI = TitleViewSwiftUI(
+            country: country.name,
+            capital: country.capital,
+            rate: country.rate,
+            height: titleViewHeight
+        )
+        let hostingController = UIHostingController(rootView: titleViewSwiftUI)
+        self.addChild(hostingController)
+        self.view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+
+        // Set constraints
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        hostingController.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        hostingController.view.topAnchor.constraint(equalTo: self.imageView.bottomAnchor).isActive = true
+        hostingController.view.heightAnchor.constraint(equalToConstant: titleViewHeight).isActive = true
+
+        // Hide old UIKit view
+        self.titleView.isHidden = true
     }
 }
