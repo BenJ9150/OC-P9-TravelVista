@@ -57,6 +57,7 @@ private extension TitleViewSwiftUI {
                     .padding(.all, 1)
                     .frame(width: 19, height: 19)
                     .foregroundStyle(.accent)
+                    .accessibilityIdentifier("star")
             }
         }
         .padding(.trailing, 16)
