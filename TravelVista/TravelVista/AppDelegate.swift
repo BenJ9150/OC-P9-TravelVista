@@ -24,16 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
 
     private func setHostingControllerForListView() {
-        guard let window = window else {
-            return
-        }
+        window = UIWindow(frame: UIScreen.main.bounds)
         let hostingController = UIHostingController(rootView: ListView())
-        
-        if let oldRootViewController = window.rootViewController {
-            oldRootViewController.view.removeFromSuperview()
-            oldRootViewController.removeFromParent()
-        }
-        window.rootViewController = hostingController
-        window.makeKeyAndVisible()
+        window?.rootViewController = hostingController
+        window?.makeKeyAndVisible()
     }
 }
