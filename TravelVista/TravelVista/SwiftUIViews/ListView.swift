@@ -101,6 +101,8 @@ private extension ListView {
         ForEach(region.countries, id: \.self) { country in
             NavigationLink {
                 DetailView(country: country)
+                    .navigationTitle(country.name)
+                    .navigationBarTitleDisplayMode(.inline)
             } label: {
                 VStack(spacing: 0) {
                     if country == region.countries.first {
