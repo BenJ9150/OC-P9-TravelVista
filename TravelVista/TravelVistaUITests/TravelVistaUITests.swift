@@ -9,21 +9,49 @@ import XCTest
 
 final class TravelVistaUITests: XCTestCase {
 
+    private var app: XCUIApplication!
+
+    // MARK: ListView properties
+
     private let uiTesting_COUNTRY_ITEM_ID      = "COUNTRY_ITEM_ID"
     private let uiTesting_COUNTRY_NAME_ID      = "COUNTRY_NAME_ID"
     private let uiTesting_COUNTRY_CAPITAL_ID   = "COUNTRY_CAPITAL_ID"
     private let uiTesting_COUNTRY_RATE_ID      = "COUNTRY_RATE_ID"
     private let uiTesting_PINNED_HEADER_ID     = "PINNED_HEADER_ID"
     private let uiTesting_NOT_PINNED_HEADER_ID = "NOT_PINNED_HEADER_ID"
-    private let uiTesting_STAR_ID              = "STAR_ID"
     private let listViewNavigationTitle        = "Liste de voyages"
 
-    private var app: XCUIApplication!
+    // MARK: DetailView properties
+
+    private let uiTesting_STAR_ID              = "STAR_ID"
+    private let uiTesting_MAP_BUTTON_ID        = "MAP_BUTTON_ID"
+
+    // MARK: MapView properties
+
+    private let uiTesting_MAP_VIEW_TITLE_ID    = "TravelVista.MapView"
+    private let uiTesting_MAP_VIEW_ID          = "MAP_VIEW_ID"
+    private let uiTesting_MAP_VIEW_BALLOON_ID  = "balloon_shadow"
+    
+    // MARK: Setup
     
     override func setUp() {
         app = XCUIApplication()
         continueAfterFailure = false
         app.launch()
+    }
+
+    // MARK: Pinned header after scrolling
+
+    func test_OneHeaderIsPinnedAfterScrolling() {
+        // Check if there is no pinned header before scrolling
+        XCTAssertFalse(app.staticTexts[uiTesting_PINNED_HEADER_ID].exists)
+        XCTAssertTrue(app.staticTexts[uiTesting_NOT_PINNED_HEADER_ID].exists)
+        
+        // Scroll
+        app.scrollViews.firstMatch.swipeUp()
+        
+        // Check if there pinned header after scrolling
+        XCTAssertTrue(app.staticTexts[uiTesting_PINNED_HEADER_ID].exists)
     }
 
     // MARK: Open detail view
@@ -60,17 +88,31 @@ final class TravelVistaUITests: XCTestCase {
         XCTAssertEqual(starsInDetailView.count, countryRate)
     }
 
-    // MARK: Pinned header after scrolling
+    // MARK: Open map view
 
-    func test_OneHeaderIsPinnedAfterScrolling() {
-        // Check if there is no pinned header before scrolling
-        XCTAssertFalse(app.staticTexts[uiTesting_PINNED_HEADER_ID].exists)
-        XCTAssertTrue(app.staticTexts[uiTesting_NOT_PINNED_HEADER_ID].exists)
+    func test_OpenMapViewAndCheckPinDataAndPosition() {
+        // Get first item of listView and save capital
+        let firstCountryItem = app.buttons[uiTesting_COUNTRY_ITEM_ID].firstMatch
+        let countryCapital = firstCountryItem.staticTexts[uiTesting_COUNTRY_CAPITAL_ID].firstMatch.label
+
+        // Navigate to detail view
+        firstCountryItem.tap()
+
+        // Navigate to Map View
+        let mapViewButton = app.buttons[uiTesting_MAP_BUTTON_ID].firstMatch
+        mapViewButton.tap()
+        XCTAssertTrue(app.navigationBars[uiTesting_MAP_VIEW_TITLE_ID].exists)
         
-        // Scroll
-        app.scrollViews.firstMatch.swipeUp()
+        // Get mapView
+        let mapView = app.otherElements[uiTesting_MAP_VIEW_ID].firstMatch
         
-        // Check if there pinned header after scrolling
-        XCTAssertTrue(app.staticTexts[uiTesting_PINNED_HEADER_ID].exists)
+        // Check pin title and balloon image
+        let pinTitle = mapView.otherElements[countryCapital].firstMatch
+        let balloonImage = mapView.images[uiTesting_MAP_VIEW_BALLOON_ID].firstMatch
+        XCTAssertEqual(countryCapital, pinTitle.label)
+        XCTAssertTrue(balloonImage.exists)
+
+        // Check if map is centered on the pin
+        XCTAssertTrue(pinTitle.isHittable)
     }
 }
