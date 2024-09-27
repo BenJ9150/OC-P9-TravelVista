@@ -9,6 +9,9 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
+
+    private let uiTesting_MAP_VIEW_ID = "MAP_VIEW_ID"
+
     var coordinates: CLLocationCoordinate2D? = nil
     var capitalName: String? = nil
     
@@ -21,6 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
            let capitalName = self.capitalName {
             self.setMapLocation(coordinates: coordinates)
             self.setMapPins(coordinates: coordinates, capitalName: capitalName)
+            self.mapView.accessibilityIdentifier = uiTesting_MAP_VIEW_ID
         }
     }
     

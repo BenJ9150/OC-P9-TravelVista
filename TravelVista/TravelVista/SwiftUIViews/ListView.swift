@@ -9,7 +9,15 @@ import SwiftUI
 
 struct ListView: View {
 
-    let viewModel = ListViewModel()
+    private let uiTesting_COUNTRY_ITEM_ID      = "COUNTRY_ITEM_ID"
+    private let uiTesting_COUNTRY_NAME_ID      = "COUNTRY_NAME_ID"
+    private let uiTesting_COUNTRY_CAPITAL_ID   = "COUNTRY_CAPITAL_ID"
+    private let uiTesting_COUNTRY_RATE_ID      = "COUNTRY_RATE_ID"
+    private let uiTesting_PINNED_HEADER_ID     = "PINNED_HEADER_ID"
+    private let uiTesting_NOT_PINNED_HEADER_ID = "NOT_PINNED_HEADER_ID"
+    private let listViewNavigationTitle        = "Liste de voyages"
+
+    private let viewModel = ListViewModel()
     @State private var pinnedRegionName = ""
     
     var body: some View {
@@ -31,7 +39,7 @@ struct ListView: View {
                 .coordinateSpace(.named("LazyVStack"))
                 .padding(.vertical, 22)
             }
-            .navigationTitle("Liste de voyages")
+            .navigationTitle(listViewNavigationTitle)
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -68,6 +76,8 @@ private extension ListView {
     
     func headerView(regionName: String) -> some View {
         GeometryReader { geo in
+            let isPinned = pinnedRegionName == regionName
+
             Text(regionName)
                 .font(.subheadline)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -78,7 +88,10 @@ private extension ListView {
                 .background(
                     Rectangle()
                         .fill(Material.bar)
-                        .opacity(pinnedRegionName == regionName ? 1 : 0)
+                        .opacity(isPinned ? 1 : 0)
+                )
+                .accessibilityIdentifier(
+                    isPinned ? uiTesting_PINNED_HEADER_ID : uiTesting_NOT_PINNED_HEADER_ID
                 )
                 .onChange(of: geo.frame(in: .named("LazyVStack")).minY) { _, minY in
                     if abs(minY) == 0 {
@@ -118,7 +131,7 @@ private extension ListView {
                 .frame(height: 65)
                 .padding(.bottom, country == region.countries.last ? 14 : 0)
             }
-
+            .accessibilityIdentifier(uiTesting_COUNTRY_ITEM_ID)
         }
     }
 }
@@ -129,7 +142,7 @@ private extension ListView {
 
     func countryItem(for country: Country) -> some View {
         HStack {
-            Image(uiImage: UIImage(named: country.pictureName) ?? UIImage())
+            Image(uiImage: UIImage(named: country.pictureName)!)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 52, height: 52)
@@ -141,18 +154,21 @@ private extension ListView {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(Color("CustomBlue"))
                     .frame(height: 24)
+                    .accessibilityIdentifier(uiTesting_COUNTRY_NAME_ID)
                 Text(country.capital)
                     .font(.system(size: 15))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.primary)
                     .frame(height: 20)
                     .padding(.bottom, 6)
+                    .accessibilityIdentifier(uiTesting_COUNTRY_CAPITAL_ID)
             }
             .frame(height: 50)
             Spacer()
             Text("\(country.rate)")
                 .font(.system(size: 17))
                 .foregroundColor(.primary)
+                .accessibilityIdentifier(uiTesting_COUNTRY_RATE_ID)
             Image(systemName: "star.fill")
                 .resizable()
                 .scaledToFit()

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TitleViewSwiftUI: View {
 
+    private let uiTesting_STAR_ID = "STAR_ID"
+
     let country: String
     let capital: String
     let rate: Int
@@ -57,6 +59,7 @@ private extension TitleViewSwiftUI {
                     .padding(.all, 1)
                     .frame(width: 19, height: 19)
                     .foregroundStyle(.accent)
+                    .accessibilityIdentifier(uiTesting_STAR_ID)
             }
         }
         .padding(.trailing, 16)
